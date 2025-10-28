@@ -1,68 +1,76 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-8 offset-lg-2">
+    <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary mb-3">
+        &larr; Back to All Reviews
+    </a>
 
-            @if ($movie->poster_url)
-                <img src="{{ $movie->poster_url }}" class="img-fluid rounded mb-3" alt="{{ $movie->title }} Poster"
-                    style="max-height: 500px; width: 100%; object-fit: contain;">
-            @endif
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+            <div class="row g-5">
+                
+                {{-- Column 1: Poster --}}
+                <div class="col-lg-4">
+                    @if ($movie->poster_url)
+                        <img src="{{ $movie->poster_url }}" 
+                             class="poster-show-page shadow-sm" 
+                             alt="{{ $movie->title }} Poster">
+                    @else
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center h-100" style="min-height: 400px;">
+                            <i class="bi bi-film fs-1 text-muted"></i>
+                        </div>
+                    @endif
+                </div>
 
-            <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary mb-3">
-                &larr; Back to All Reviews
-            </a>
-
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    {{-- MODIFIED THIS --}}
-                    <h1 class="mb-0 d-inline text-break">
-                        {{ $movie->title }}
-                        {{-- ADD THIS @if --}}
+                {{-- Column 2: Details --}}
+                <div class="col-lg-8">
+                    
+                    {{-- Header: Title, Year, Genre --}}
+                    <h1 class="display-5 fw-bold mb-0 text-break">{{ $movie->title }}</h1>
+                    <div class="fs-5 text-muted mb-3">
                         @if ($movie->release_year)
-                            <span class="text-muted fw-normal">({{ $movie->release_year }})</span>
+                            <span class="me-2">{{ $movie->release_year }}</span>
+                            <span class="me-2">&bull;</span>
                         @endif
-                    </h1>
-                    <span class="badge bg-secondary fs-6 ms-2">{{ $movie->genre }}</span>
-
-                </div>
-
-                {{-- Visual Star Rating --}}
-                <div class="star-rating fs-4">
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $movie->star_rating)
-                            <i class="bi bi-star-fill"></i>
-                        @else
-                            <i class="bi bi-star"></i>
-                        @endif
-                    @endfor
-                </div>
-            </div>
-            <div class="card-body">
-                <p class="card-text">{{ $movie->review_content }}</p>
-            </div>
-            <div class="card-footer text-muted">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Posted on: {{ $movie->created_at->format('M d, Y') }}
+                        <span>{{ $movie->genre }}</span>
                     </div>
-                    <div class="col-sm-6 text-sm-end">
-                        {{-- Action Buttons --}}
-                        <a href="{{ route('movies.edit', $movie->id) }}" class="btn btn-warning">Edit</a>
 
-                        <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" class="d-inline"
-                            onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');">
+                    {{-- Star Rating --}}
+                    <div class="star-rating fs-2 mb-4">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="bi {{ $i <= $movie->star_rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                        @endfor
+                    </div>
 
+                    {{-- Full Review Content --}}
+                    <h4 class="fw-bold">Review</h4>
+                    <p class="review-content mb-4">{{ $movie->review_content }}</p>
+
+                    <hr class="my-4">
+
+                    {{-- Action Buttons --}}
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('movies.edit', $movie->id) }}" class="btn btn-warning btn-lg me-2">Edit</a>
+                        
+                        <form action="{{ route('movies.destroy', $movie->id) }}" method="POST"
+                              onsubmit="return confirm('Are you sure you want to delete this review?');">
                             @csrf
                             @method('DELETE')
-
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-lg">Delete</button>
                         </form>
+                        
+                        {{-- Timestamps --}}
+                        <div class="ms-auto text-muted text-end">
+                            <small>
+                                Posted on: {{ $movie->created_at->format('M d, Y') }}<br>
+                                @if ($movie->created_at != $movie->updated_at)
+                                    Last updated: {{ $movie->updated_at->format('M d, Y') }}
+                                @endif
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 @endsection
