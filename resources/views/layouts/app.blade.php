@@ -12,6 +12,13 @@
         .star-rating {
             color: #ffc107; /* Bootstrap's 'warning' yellow */
         }
+
+        /* Add this new rule for the index page posters */
+        .index-poster-img {
+            height: 300px;       /* Set a fixed height */
+            object-fit: cover; /* Scale/crop image to fill the space */
+            width: 100%;
+        }
     </style>
 </head>
 <body>

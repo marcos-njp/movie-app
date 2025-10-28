@@ -15,6 +15,13 @@
             @foreach ($movies as $movie)
                 <div class="col-md-6 col-lg-4 mb-3">
                     <div class="card h-100">
+                        
+                        @if ($movie->poster_url)
+                            <img src="{{ $movie->poster_url }}" 
+                                 class="card-img-top index-poster-img" 
+                                 alt="{{ $movie->title }} Poster">
+                        @endif
+
                         <div class="card-body">
                             <h5 class="card-title">{{ $movie->title }}</h5>
                             

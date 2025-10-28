@@ -38,6 +38,14 @@
                 <option value="5" @if($rating == 5) selected @endif>5 Stars</option>
             </select>
         </div>
+        
+        <div class="mb-3">
+        <label for="poster_url" class="form-label">Poster Image URL (Optional)</label>
+        <input type="url" class="form-control" id="poster_url" name="poster_url" 
+               placeholder="https://example.com/image.jpg"
+               value="{{ old('poster_url', $movie->poster_url) }}">
+        <div class="form-text">Find an image online and paste the full URL here.</div>
+    </div>
 
         <div class="mb-3">
             <label for="review_content" class="form-label">Review</label>

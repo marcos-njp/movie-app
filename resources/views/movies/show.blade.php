@@ -4,6 +4,13 @@
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
 
+            @if ($movie->poster_url)
+                <img src="{{ $movie->poster_url }}" 
+                     class="img-fluid rounded mb-3" 
+                     alt="{{ $movie->title }} Poster"
+                     style="max-height: 500px; width: 100%; object-fit: contain;">
+            @endif
+
             <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary mb-3">
                 &larr; Back to All Reviews
             </a>

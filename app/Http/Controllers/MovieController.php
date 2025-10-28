@@ -36,6 +36,7 @@ class MovieController extends Controller
             'title' => 'required|string|max:191',
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
+            'poster_url' => 'nullable|url|max:500', 
         ]);
 
         // 2. Create the new movie in the database
@@ -76,6 +77,7 @@ class MovieController extends Controller
             'title' => 'required|string|max:191',
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
+            'poster_url' => 'nullable|url|max:500',
         ]);
 
         // 2. Update the existing movie record
