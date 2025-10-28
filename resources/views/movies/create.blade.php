@@ -55,16 +55,16 @@
         </div>
 
         <div class="mb-3">
-        <label for="release_year" class="form-label">Release Year (Optional)</label>
-        <input type="number" class="form-control" id="release_year" name="release_year" 
-               min="1888" max="{{ date('Y') }}" 
-               value="{{ old('release_year') }}"
-               placeholder="E.g., 2023">
-    </div>
+            <label for="release_year" class="form-label">Release Year (Optional)</label>
+            <input type="number" class="form-control" id="release_year" name="release_year" min="1888"
+                max="{{ date('Y') }}" value="{{ old('release_year') }}" placeholder="E.g., 2023">
+        </div>
 
         <div class="mb-3">
             <label for="review_content" class="form-label">Review</label>
-            <textarea class="form-control" id="review_content" name="review_content" rows="5">{{ old('review_content') }}</textarea>
+            <textarea class="form-control" id="review_content" name="review_content" rows="5" data-maxlength="5000"
+                oninput="updateCharCount(this)">{{ old('review_content', $movie->review_content ?? '') }}</textarea>
+            <div id="char-counter" class="form-text text-end">0 / 5000</div>
         </div>
 
         <button type="submit" class="btn btn-primary">Save Review</button>

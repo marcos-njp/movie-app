@@ -25,28 +25,55 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         // 1. Start a new query for the Movie model
         $query = Movie::query();
 
-        // 2. Check if a genre filter is present in the URL
+        // 2. Handle Search
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // 3. Handle Genre Filter
         if ($request->has('genre') && $request->genre != '') {
             $query->where('genre', $request->genre);
         }
 
-        // 3. Get all genres for the filter dropdown.
-        // We use 'distinct' to only get each genre name once.
+        // 4. Handle Sorting
+        $sortOrder = $request->input('sort', 'date_desc'); // Default to newest
+
+        switch ($sortOrder) {
+            case 'rating_asc':
+                $query->orderBy('star_rating', 'asc');
+                break;
+            case 'rating_desc':
+                $query->orderBy('star_rating', 'desc');
+                break;
+            case 'date_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            default: // 'date_desc'
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // 5. Get all genres for the filter dropdown.
         $genres = Movie::select('genre')->distinct()->pluck('genre');
 
-        // 4. Order by newest first and get the results
-        $movies = $query->latest()->get();
+        // 6. Get the results
+        $movies = $query->get();
 
-        // 5. Load the view and pass both movies and genres
+        // 7. Load the view and pass all data
         return view('movies.index', [
             'movies' => $movies,
             'genres' => $genres,
-            'selectedGenre' => $request->genre // Pass the selected genre back to the view
+            'selectedGenre' => $request->genre,
+            'currentSort' => $sortOrder,
+            'currentSearch' => $request->search,
         ]);
     }
 
@@ -114,14 +141,14 @@ class MovieController extends Controller
         $currentYear = date('Y');
         // 1. Validate the incoming data
         $validated = $request->validate([
-            
+
             'title' => 'required|string|max:191',
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
             'poster_url' => 'nullable|url|max:500',
             'genre' => 'required|string|in:' . implode(',', $this->genres),
             'release_year' => "nullable|integer|min:1888|max:$currentYear"
-            
+
         ]);
 
         // 2. Update the existing movie record
