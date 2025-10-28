@@ -20,5 +20,7 @@ class Movie extends Model
         'review_content',
         'poster_url',
         'genre',
+        'release_year',
+        
     ];
 }

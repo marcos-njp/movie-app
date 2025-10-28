@@ -5,10 +5,8 @@
         <div class="col-lg-8 offset-lg-2">
 
             @if ($movie->poster_url)
-                <img src="{{ $movie->poster_url }}" 
-                     class="img-fluid rounded mb-3" 
-                     alt="{{ $movie->title }} Poster"
-                     style="max-height: 500px; width: 100%; object-fit: contain;">
+                <img src="{{ $movie->poster_url }}" class="img-fluid rounded mb-3" alt="{{ $movie->title }} Poster"
+                    style="max-height: 500px; width: 100%; object-fit: contain;">
             @endif
 
             <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary mb-3">
@@ -17,47 +15,54 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h1 class="mb-0 text-break">{{ $movie->title }}</h1>
-                    
+                    {{-- MODIFIED THIS --}}
+                    <h1 class="mb-0 d-inline text-break">
+                        {{ $movie->title }}
+                        {{-- ADD THIS @if --}}
+                        @if ($movie->release_year)
+                            <span class="text-muted fw-normal">({{ $movie->release_year }})</span>
+                        @endif
+                    </h1>
                     <span class="badge bg-secondary fs-6 ms-2">{{ $movie->genre }}</span>
-                    </div>
 
-                    {{-- Visual Star Rating --}}
-                    <div class="star-rating fs-4">
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= $movie->star_rating)
-                                <i class="bi bi-star-fill"></i>
-                            @else
-                                <i class="bi bi-star"></i>
-                            @endif
-                        @endfor
-                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">{{ $movie->review_content }}</p>
+
+                {{-- Visual Star Rating --}}
+                <div class="star-rating fs-4">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= $movie->star_rating)
+                            <i class="bi bi-star-fill"></i>
+                        @else
+                            <i class="bi bi-star"></i>
+                        @endif
+                    @endfor
                 </div>
-                <div class="card-footer text-muted">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            Posted on: {{ $movie->created_at->format('M d, Y') }}
-                        </div>
-                        <div class="col-sm-6 text-sm-end">
-                            {{-- Action Buttons --}}
-                            <a href="{{ route('movies.edit', $movie->id) }}" class="btn btn-warning">Edit</a>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ $movie->review_content }}</p>
+            </div>
+            <div class="card-footer text-muted">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Posted on: {{ $movie->created_at->format('M d, Y') }}
+                    </div>
+                    <div class="col-sm-6 text-sm-end">
+                        {{-- Action Buttons --}}
+                        <a href="{{ route('movies.edit', $movie->id) }}" class="btn btn-warning">Edit</a>
 
-                            <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" class="d-inline"
-                                onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');">
+                        <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" class="d-inline"
+                            onsubmit="return confirm('Are you sure you want to delete this review? This action cannot be undone.');">
 
-                                @csrf
-                                @method('DELETE')
+                            @csrf
+                            @method('DELETE')
 
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 @endsection

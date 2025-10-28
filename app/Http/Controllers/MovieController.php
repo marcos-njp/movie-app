@@ -64,6 +64,7 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
+        $currentYear = date('Y');
         // 1. Validate the incoming data
         $validated = $request->validate([
             'title' => 'required|string|max:191',
@@ -71,6 +72,7 @@ class MovieController extends Controller
             'review_content' => 'required|string',
             'poster_url' => 'nullable|url|max:500',
             'genre' => 'required|string|in:' . implode(',', $this->genres),
+            'release_year' => "nullable|integer|min:1888|max:$currentYear",
         ]);
 
         // 2. Create the new movie in the database
@@ -109,13 +111,17 @@ class MovieController extends Controller
      */
     public function update(Request $request, Movie $movie): RedirectResponse
     {
+        $currentYear = date('Y');
         // 1. Validate the incoming data
         $validated = $request->validate([
+            
             'title' => 'required|string|max:191',
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
             'poster_url' => 'nullable|url|max:500',
             'genre' => 'required|string|in:' . implode(',', $this->genres),
+            'release_year' => "nullable|integer|min:1888|max:$currentYear"
+            
         ]);
 
         // 2. Update the existing movie record

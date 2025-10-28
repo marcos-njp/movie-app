@@ -8,12 +8,12 @@
             <select name="genre" class="form-select me-2" onchange="this.form.submit()">
                 <option value="">All Genres</option>
                 @foreach ($genres as $genre)
-                    <option value="{{ $genre }}" @if($selectedGenre == $genre) selected @endif>
+                    <option value="{{ $genre }}" @if ($selectedGenre == $genre) selected @endif>
                         {{ $genre }}
                     </option>
                 @endforeach
             </select>
-            
+
             @if ($selectedGenre)
                 <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary">Clear</a>
             @endif
@@ -33,19 +33,25 @@
                     <div class="card h-100">
 
                         @if ($movie->poster_url)
-                            <img src="{{ $movie->poster_url }}" 
-                                 class="card-img-top index-poster-img" 
-                                 alt="{{ $movie->title }} Poster">
+                            <img src="{{ $movie->poster_url }}" class="card-img-top index-poster-img"
+                                alt="{{ $movie->title }} Poster">
                         @endif
 
                         <div class="card-body">
-                            <h5 class="card-title">{{ $movie->title }}</h5>
-                            
+                            <h5 class="card-title">
+                                {{ $movie->title }}
+                                {{-- ADD THIS @if --}}
+                                @if ($movie->release_year)
+                                    <span class="text-muted fw-normal">({{ $movie->release_year }})</span>
+                                @endif
+                            </h5>
                             <div class="star-rating mb-2">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $movie->star_rating)
-                                        <i class="bi bi-star-fill"></i> @else
-                                        <i class="bi bi-star"></i> @endif
+                                        <i class="bi bi-star-fill"></i>
+                                    @else
+                                        <i class="bi bi-star"></i>
+                                    @endif
                                 @endfor
                             </div>
 
