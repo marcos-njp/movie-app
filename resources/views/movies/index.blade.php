@@ -3,6 +3,22 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>All Movie Reviews</h1>
+
+        <form action="{{ route('movies.index') }}" method="GET" class="d-flex">
+            <select name="genre" class="form-select me-2" onchange="this.form.submit()">
+                <option value="">All Genres</option>
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre }}" @if($selectedGenre == $genre) selected @endif>
+                        {{ $genre }}
+                    </option>
+                @endforeach
+            </select>
+            
+            @if ($selectedGenre)
+                <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary">Clear</a>
+            @endif
+        </form>
+
         <a href="{{ route('movies.create') }}" class="btn btn-primary">Add New Review</a>
     </div>
 
@@ -15,7 +31,7 @@
             @foreach ($movies as $movie)
                 <div class="col-md-6 col-lg-4 mb-3">
                     <div class="card h-100">
-                        
+
                         @if ($movie->poster_url)
                             <img src="{{ $movie->poster_url }}" 
                                  class="card-img-top index-poster-img" 
@@ -33,9 +49,12 @@
                                 @endfor
                             </div>
 
+                            <span class="badge bg-secondary mb-2">{{ $movie->genre }}</span>
+
                             <p class="card-text">
                                 {{ Str::limit($movie->review_content, 100) }}
                             </p>
+
                         </div>
                         <div class="card-footer">
                             <a href="{{ route('movies.show', $movie->id) }}" class="btn btn-info btn-sm">View Details</a>

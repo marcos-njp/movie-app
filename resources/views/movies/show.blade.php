@@ -17,7 +17,10 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h1 class="mb-0">{{ $movie->title }}</h1>
+                    <h1 class="mb-0 text-break">{{ $movie->title }}</h1>
+                    
+                    <span class="badge bg-secondary fs-6 ms-2">{{ $movie->genre }}</span>
+                    </div>
 
                     {{-- Visual Star Rating --}}
                     <div class="star-rating fs-4">

@@ -40,7 +40,18 @@
             <input type="url" class="form-control" id="poster_url" name="poster_url"
                 placeholder="https://example.com/image.jpg" value="{{ old('poster_url') }}">
             <div class="form-text">Find an image online and paste the full URL here.</div>
-            
+        </div>
+
+        <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <select class="form-select" id="genre" name="genre">
+                <option value="" disabled selected>Choose a genre</option>
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre }}" @if (old('genre') == $genre) selected @endif>
+                        {{ $genre }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-3">

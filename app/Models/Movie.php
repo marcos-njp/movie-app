@@ -19,5 +19,6 @@ class Movie extends Model
         'star_rating',
         'review_content',
         'poster_url',
+        'genre',
     ];
 }

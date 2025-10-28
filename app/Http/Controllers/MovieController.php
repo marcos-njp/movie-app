@@ -8,15 +8,46 @@ use Illuminate\Http\RedirectResponse;
 
 class MovieController extends Controller
 {
+    private $genres = [
+        'Action',
+        'Comedy',
+        'Drama',
+        'Horror',
+        'Sci-Fi',
+        'Fantasy',
+        'Romance',
+        'Thriller',
+        'Documentary',
+    ];
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $movies = Movie::latest()->get();
+        // 1. Start a new query for the Movie model
+        $query = Movie::query();
 
-        // Load the view and pass the $movies variable
-        return view('movies.index', compact('movies'));
+        // 2. Check if a genre filter is present in the URL
+        if ($request->has('genre') && $request->genre != '') {
+            $query->where('genre', $request->genre);
+        }
+
+        // 3. Get all genres for the filter dropdown.
+        // We use 'distinct' to only get each genre name once.
+        $genres = Movie::select('genre')->distinct()->pluck('genre');
+
+        // 4. Order by newest first and get the results
+        $movies = $query->latest()->get();
+
+        // 5. Load the view and pass both movies and genres
+        return view('movies.index', [
+            'movies' => $movies,
+            'genres' => $genres,
+            'selectedGenre' => $request->genre // Pass the selected genre back to the view
+        ]);
     }
 
     /**
@@ -24,7 +55,9 @@ class MovieController extends Controller
      */
     public function create()
     {
-        return view('movies.create');
+        return view('movies.create', [
+            'genres' => $this->genres
+        ]);
     }
     /**
      * Store a newly created resource in storage.
@@ -36,7 +69,8 @@ class MovieController extends Controller
             'title' => 'required|string|max:191',
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
-            'poster_url' => 'nullable|url|max:500', 
+            'poster_url' => 'nullable|url|max:500',
+            'genre' => 'required|string|in:' . implode(',', $this->genres),
         ]);
 
         // 2. Create the new movie in the database
@@ -64,7 +98,10 @@ class MovieController extends Controller
     public function edit(Movie $movie)
     {
         // Pass the specific movie data to the edit view
-        return view('movies.edit', compact('movie'));
+        return view('movies.edit', [
+            'movie' => $movie,
+            'genres' => $this->genres
+        ]);
     }
 
     /**
@@ -78,6 +115,7 @@ class MovieController extends Controller
             'star_rating' => 'required|integer|min:1|max:5',
             'review_content' => 'required|string',
             'poster_url' => 'nullable|url|max:500',
+            'genre' => 'required|string|in:' . implode(',', $this->genres),
         ]);
 
         // 2. Update the existing movie record
