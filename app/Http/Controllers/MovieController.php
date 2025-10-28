@@ -28,6 +28,12 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource.
+     */
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         // 1. Start a new query for the Movie model
@@ -42,10 +48,10 @@ class MovieController extends Controller
         if ($request->has('genre') && $request->genre != '') {
             $query->where('genre', $request->genre);
         }
-
+        
         // 4. Handle Sorting
-        $sortOrder = $request->input('sort', 'date_desc'); // Default to newest
-
+        $sortOrder = $request->input('sort', 'date_desc'); 
+        
         switch ($sortOrder) {
             case 'rating_asc':
                 $query->orderBy('star_rating', 'asc');
@@ -54,10 +60,14 @@ class MovieController extends Controller
                 $query->orderBy('star_rating', 'desc');
                 break;
             case 'date_asc':
-                $query->orderBy('created_at', 'asc');
+                // *** CHANGED THIS ***
+                // This now sorts by "Oldest Release Year"
+                $query->orderBy('release_year', 'asc');
                 break;
-            default: // 'date_desc'
-                $query->orderBy('created_at', 'desc');
+            default: 
+                // *** CHANGED THIS ***
+                // This now sorts by "Newest Release Year"
+                $query->orderBy('release_year', 'desc');
                 break;
         }
 
@@ -67,13 +77,17 @@ class MovieController extends Controller
         // 6. Get the results
         $movies = $query->get();
 
-        // 7. Load the view and pass all data
+        // 7. Get the current view, default to 'list'
+        $currentView = $request->input('view', 'list');
+
+        // 8. Load the view and pass all data
         return view('movies.index', [
             'movies' => $movies,
             'genres' => $genres,
             'selectedGenre' => $request->genre,
             'currentSort' => $sortOrder,
             'currentSearch' => $request->search,
+            'currentView' => $currentView,
         ]);
     }
 
