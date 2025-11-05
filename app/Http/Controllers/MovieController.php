@@ -22,18 +22,6 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    /**
-     * Display a listing of the resource.
-     */
-    /**
-     * Display a listing of the resource.
-     */
-    /**
-     * Display a listing of the resource.
-     */
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // 1. Start a new query for the Movie model
